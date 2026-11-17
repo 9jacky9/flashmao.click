@@ -1,74 +1,55 @@
 <!DOCTYPE html>
+
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Wi-Fi 4、5、6 标准区别：买路由器该怎么选 - 闪电猫航速前沿</title>
-  <meta name="description" content="Wi-Fi 4、Wi-Fi 5、Wi-Fi 6 到底有什么区别？用通俗的语言说明频段、速率、多设备能力与选购路由器时需要关注的指标。">
-  <link rel="stylesheet" href="style.css">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>下载断流和丢包怎么排查：先找故障范围，再谈TCP参数</title>
+<meta content="通过网关、终点、实际下载和路径统计定位丢包范围，说明拥塞控制、重传与MTU的边界，避免盲目套用系统优化命令。" name="description"/>
+<link href="style.css" rel="stylesheet"/>
 </head>
 <body>
-
-  <header class="site-header">
-    <div class="header-container">
-      <a href="index.html" class="brand-logo">
-        <svg class="logo-icon-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="50" cy="50" r="46" fill="#162238" stroke="#FF5A1F" stroke-width="3"/>
-          <path d="M28 62C24 45 32 30 42 22C44 29 48 32 54 30C58 24 64 22 72 23C70 32 64 38 68 44C76 52 72 65 64 72C54 78 36 76 28 62Z" fill="#0F172A" stroke="#38BDF8" stroke-width="2"/>
-          <path d="M58 20L38 48H52L42 76L68 42H52L58 20Z" fill="#FF5A1F"/>
-          <circle cx="44" cy="40" r="3" fill="#38BDF8"/>
-          <circle cx="58" cy="40" r="3" fill="#38BDF8"/>
-        </svg>
-        <span class="brand-text">闪电猫</span>
-      </a>
-
-      <nav class="nav-links">
-        <a href="index.html#features">互联性能</a>
-        <a href="index.html#streaming">流媒体与AI</a>
-        <a href="index.html#pricing">方案价格</a>
-        <a href="index.html#faq">常见问答</a>
-        <a href="pulse.html">航速前沿</a>
-      </nav>
-
-      <a href="https://ww012.twilightaff.com/#/?code=A56DH1Af" class="header-cta" rel="nofollow" target="_blank">立即开通</a>
-    </div>
-  </header>
-
-  <div class="page-container">
-    <a href="pulse.html" class="back-home-btn">&larr; 返回航速前沿专栏</a>
-
-    <article class="page-article">
-      <header class="article-header">
-        <h1 class="article-title">Wi-Fi 4、5、6 标准区别：买路由器该怎么选</h1>
-        <div class="article-meta-bar">
- <span>作者：闪电猫使用手记</span> <span>分类：设备选购</span> <span>更新时间：2026-11-11</span> <span>预计阅读：6 分钟</span>
- </div>
-      </header>
-
-      <div class="article-body">
-<p>路由器包装上的数字和字母让人眼花缭乱，其实核心区别并不难懂。</p>
-<h2>一、三代标准的对应关系</h2>
-<ul><li>Wi-Fi 4：较早的标准，主要在 2.4GHz 与 5GHz。</li><li>Wi-Fi 5：主要工作在 5GHz，速度明显提升。</li><li>Wi-Fi 6：更擅长同时连接大量设备，更省电。</li></ul>
-<h2>二、两个频段的取舍</h2>
-<p>2.4GHz 穿墙好但速度慢、干扰多；5GHz 速度快但穿墙弱。新标准多提供双频甚至三频。</p>
-<h2>三、什么时候值得升级</h2>
-<p>家里联网设备多（手机、电脑、智能家居加起来十几台）、有 4K 视频与云游戏需求，Wi-Fi 6 更有优势。设备较少、以浏览网页为主，Wi-Fi 5 也足够。</p>
-<h2>四、别忽略设备端</h2>
-<p>手机与电脑也要支持相应标准才能受益。老设备连上新路由器，速度仍受限于自身。</p>
-<h2>五、选购小贴士</h2>
-<p>关注户型与覆盖，必要时选择组网方案；有线回程能显著提升稳定性。</p>
- </div>
-    </article>
-  </div>
-
-  <footer class="site-footer">
-    <div class="footer-nav">
-      <a href="sitemap.html" class="footer-link">网站地图</a>
-      <a href="about.html" class="footer-link">关于我们</a>
-      <a href="terms.html" class="footer-link">服务条款</a>
-      <a href="privacy.html" class="footer-link">隐私政策</a>
-    </div>
-  </footer>
-
+<header class="site-header">
+<div class="header-container">
+<a class="brand-logo" href="index.html">
+<svg class="logo-icon-svg" fill="none" viewbox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+<circle cx="50" cy="50" fill="#162238" r="46" stroke="#FF5A1F" stroke-width="3"></circle>
+<path d="M28 62C24 45 32 30 42 22C44 29 48 32 54 30C58 24 64 22 72 23C70 32 64 38 68 44C76 52 72 65 64 72C54 78 36 76 28 62Z" fill="#0F172A" stroke="#38BDF8" stroke-width="2"></path>
+<path d="M58 20L38 48H52L42 76L68 42H52L58 20Z" fill="#FF5A1F"></path>
+<circle cx="44" cy="40" fill="#38BDF8" r="3"></circle>
+<circle cx="58" cy="40" fill="#38BDF8" r="3"></circle>
+</svg>
+<span class="brand-text">闪电猫</span>
+</a>
+<nav class="nav-links">
+<a href="index.html#features">互联性能</a>
+<a href="index.html#streaming">流媒体与AI</a>
+<a href="index.html#pricing">方案价格</a>
+<a href="index.html#faq">常见问答</a>
+<a href="pulse.html">航速前沿</a>
+</nav>
+<a class="header-cta" href="https://ww012.twilightaff.com/#/?code=A56DH1Af" rel="nofollow" target="_blank">立即开通</a>
+</div>
+</header>
+<div class="page-container">
+<a class="back-home-btn" href="pulse.html">← 返回航速前沿专栏</a>
+<article class="page-article">
+<header class="article-header">
+<h1 class="article-title">下载断流和丢包怎么排查：先找故障范围，再谈TCP参数</h1>
+<div class="article-meta-bar">
+<span>作者：闪电猫使用手记</span> <span>分类：设备选购</span> <span>更新时间：2026-11-11</span> <span>预计阅读：6 分钟</span>
+</div>
+</header>
+<div class="article-body"><div data-swc-article-body="2026-11-16"><h2>丢包不是一个足够具体的诊断</h2><p>文件下载中断、网页偶尔卡住和语音断续都可能与包丢失有关，也可能由应用、服务器或设备处理造成。某个诊断工具出现红色数字，只能说明该工具观察到异常。排查的第一目标是确定问题范围：本机到路由器、接入网络、特定目的地，还是单个应用。范围越清楚，后续修改越少，也越容易确认是否真的修好。</p><h2>先保存一次实际失败</h2><p>选择有权下载的固定测试文件，记录大小、来源、开始时间和失败提示。若下载成功但耗时长，也保存结果，不把它归类为断流。浏览器下载与客户端同步是不同任务，先分别记录。关闭不必要的后台传输，确认本地磁盘空间足够，避免把写入失败或主动限速当成网络丢包。此时还不需要修改任何系统参数。</p><h2>第一步测本地网关</h2><p>在Windows执行<code>ipconfig</code>找到当前默认网关，再用<code>ping -n 100 网关地址</code>获取一段观察。记录发送、接收和延迟范围，并同时观察是否发生原来的下载异常。网关可能限制诊断响应，所以结果要结合有线对照和真实业务判断。若改用网线后问题消失，优先调查无线覆盖、干扰与路由器负载。</p><h2>第二步测试一个可响应的远端</h2><p>对允许诊断且通常会响应的目标进行相同次数测试，保留目标和时间。终点不回应并不自动代表网络完全不可用，应回到网页或下载任务验证。比较时不要让本地测试在白天、远端测试在晚高峰，却把差异当成路径证据。最好在同一故障窗口内完成，缩小时间变化的影响。</p><h2>第三步理解pathping统计</h2><p>微软提供的<code>pathping 目标域名</code>先收集路径，再进行一段统计，运行时需要等待结果完整出现。查看终点与相邻节点的表现，而不是只截取最显眼的一行。某个中间设备对自己响应的包限速，后续与终点却正常，并不能据此宣称它丢弃了全部转发流量。工具结果是定位线索，仍须与真实下载对应。</p><h2>把不同应用的表现放进同一张表</h2><p>列出浏览器文件下载、视频播放和实时语音，分别记录是否异常以及发生时间。下载速度下降但语音稳定，可能与吞吐或服务限制有关；所有任务一起中断，则更需要检查接入和设备。一个来源慢、另一个来源正常，提示目标或特定路径差异。不要用更快的测速服务器来否定原目标存在的问题。</p><h2>TCP重传与速度下降怎样关联</h2><p>TCP需要可靠传输，丢失数据可能触发重传，也可能让发送方调整速率。因此下载慢可以是结果，却不能从低速度反推唯一原因。拥塞控制算法处理发送节奏，无法修复损坏的网线、无线干扰或远端主动限制。普通用户修改本机算法也不一定影响远端下载发送方，不应把安装某段优化脚本当成通用答案。</p><h2>MTU问题通常需要针对性证据</h2><p>若小请求能通而较大传输反复停住，路径最大传输单元可能是调查方向之一，但并非唯一解释。记录哪些应用和数据规模触发问题，交给相关网络维护者进一步检查。不要把网上某个数值套到所有网卡，隧道、接入方式和设备条件可能不同。调整前保存原值，修改后同时复测大文件、普通网页与其他必要服务。</p><h2>连接服务的比较应保留失败样本</h2><p>参考<a href="https://dajichang.mom/">稳定下载机场线路比较</a>时，先确认候选配置支持目标任务，再用相同文件、时段和设备比较。成功一次不能证明丢包被消除，失败样本也不能从记录里删掉。应列出完成次数、总耗时和中断次数，并说明是否改变了目标入口。流量配额和服务端限制同样可能影响长时间下载。</p><h2>按故障范围安排修复动作</h2><p>本地网关异常且有线正常，先解决无线条件；不同目标同时异常，可检查宽带设备与接入服务；单一来源持续失败，则向对应服务提供复现信息。每次只做一个动作，例如换一根已知正常的网线，再重复原测试。若结果没有改善，恢复不必要的改动，以免下一次排障面对越来越复杂的配置。</p><h2>反馈资料应能让别人重现</h2><p>给支持人员一份简短记录：开始时间、接入方式、目标任务、错误、正常对照以及已经尝试的动作。路径统计附完整上下文，日志先移除账号和令牌。不要把未经确认的原因写成确定指控，例如“某个中间节点百分百故障”。描述观察到的现象，维护方才有空间结合设备和链路资料继续核实。</p><h2>最后确认恢复覆盖原来的失败条件</h2><p>修复后在原来容易出问题的时段重测，并验证文件能完整打开或校验，而不是只看下载条走到终点。持续观察一段日常使用，确认问题没有转移到其他应用。保留有效处理与限制条件，下次遇到类似情况就可以从已知边界开始。优化的价值是减少真实任务失败，不是把诊断工具上的所有数字都变成零。</p></div></div>
+</article>
+</div>
+<footer class="site-footer">
+<div class="footer-nav">
+<a class="footer-link" href="sitemap.html">网站地图</a>
+<a class="footer-link" href="about.html">关于我们</a>
+<a class="footer-link" href="terms.html">服务条款</a>
+<a class="footer-link" href="privacy.html">隐私政策</a>
+</div>
+</footer>
 </body>
 </html>

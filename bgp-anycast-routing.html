@@ -1,74 +1,55 @@
 <!DOCTYPE html>
+
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DNS 为什么会出问题：污染、劫持与缓存的区别 - 闪电猫航速前沿</title>
-  <meta name="description" content="DNS 异常有几种不同的原因？说明 DNS 污染、劫持与缓存过期的区别、各自的表现，以及对应的检查和处理办法。">
-  <link rel="stylesheet" href="style.css">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Anycast为什么不一定连到最近城市：用请求与路由记录理解选路</title>
+<meta content="解释Anycast与BGP的关系，并通过解析、路由、响应头和业务请求整理证据，避免将地理距离与实际访问性能混为一谈。" name="description"/>
+<link href="style.css" rel="stylesheet"/>
 </head>
 <body>
-
-  <header class="site-header">
-    <div class="header-container">
-      <a href="index.html" class="brand-logo">
-        <svg class="logo-icon-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="50" cy="50" r="46" fill="#162238" stroke="#FF5A1F" stroke-width="3"/>
-          <path d="M28 62C24 45 32 30 42 22C44 29 48 32 54 30C58 24 64 22 72 23C70 32 64 38 68 44C76 52 72 65 64 72C54 78 36 76 28 62Z" fill="#0F172A" stroke="#38BDF8" stroke-width="2"/>
-          <path d="M58 20L38 48H52L42 76L68 42H52L58 20Z" fill="#FF5A1F"/>
-          <circle cx="44" cy="40" r="3" fill="#38BDF8"/>
-          <circle cx="58" cy="40" r="3" fill="#38BDF8"/>
-        </svg>
-        <span class="brand-text">闪电猫</span>
-      </a>
-
-      <nav class="nav-links">
-        <a href="index.html#features">互联性能</a>
-        <a href="index.html#streaming">流媒体与AI</a>
-        <a href="index.html#pricing">方案价格</a>
-        <a href="index.html#faq">常见问答</a>
-        <a href="pulse.html">航速前沿</a>
-      </nav>
-
-      <a href="https://ww012.twilightaff.com/#/?code=A56DH1Af" class="header-cta" rel="nofollow" target="_blank">立即开通</a>
-    </div>
-  </header>
-
-  <div class="page-container">
-    <a href="pulse.html" class="back-home-btn">&larr; 返回航速前沿专栏</a>
-
-    <article class="page-article">
-      <header class="article-header">
-        <h1 class="article-title">DNS 为什么会出问题：污染、劫持与缓存的区别</h1>
-        <div class="article-meta-bar">
- <span>作者：闪电猫使用手记</span> <span>分类：网络基础</span> <span>更新时间：2026-11-15</span> <span>预计阅读：6 分钟</span>
- </div>
-      </header>
-
-      <div class="article-body">
-<p>网页打不开，常常被归咎于“DNS 有问题”，但这个说法里其实包含三种不同的情况。</p>
-<h2>一、缓存过期或错误</h2>
-<p>系统与浏览器会缓存解析结果。网站换了服务器而你的缓存还是旧的，就会访问到错误地址。清除缓存即可恢复。</p>
-<h2>二、DNS 劫持</h2>
-<p>某些网络会把你的查询改指向其他地址，常见表现是打开网站出现奇怪的广告或跳转页面。更换为可信的 DNS，并使用加密 DNS 可以降低风险。</p>
-<h2>三、DNS 污染</h2>
-<p>指对特定域名返回了错误的结果，导致无法访问。单靠换 DNS 有时无法解决，需要通过代理端解析绕过。</p>
-<h2>四、怎么区分</h2>
-<ul><li>换一个网络（热点）测试，看是否仍然异常。</li><li>用不同的 DNS 查询同一域名，对比结果。</li><li>是否只有某些网站异常。</li></ul>
-<h2>五、处理顺序</h2>
-<p>先清缓存，再换 DNS，最后启用代理端解析。每一步都测试，便于找出真正有效的那一步。</p>
- </div>
-    </article>
-  </div>
-
-  <footer class="site-footer">
-    <div class="footer-nav">
-      <a href="sitemap.html" class="footer-link">网站地图</a>
-      <a href="about.html" class="footer-link">关于我们</a>
-      <a href="terms.html" class="footer-link">服务条款</a>
-      <a href="privacy.html" class="footer-link">隐私政策</a>
-    </div>
-  </footer>
-
+<header class="site-header">
+<div class="header-container">
+<a class="brand-logo" href="index.html">
+<svg class="logo-icon-svg" fill="none" viewbox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+<circle cx="50" cy="50" fill="#162238" r="46" stroke="#FF5A1F" stroke-width="3"></circle>
+<path d="M28 62C24 45 32 30 42 22C44 29 48 32 54 30C58 24 64 22 72 23C70 32 64 38 68 44C76 52 72 65 64 72C54 78 36 76 28 62Z" fill="#0F172A" stroke="#38BDF8" stroke-width="2"></path>
+<path d="M58 20L38 48H52L42 76L68 42H52L58 20Z" fill="#FF5A1F"></path>
+<circle cx="44" cy="40" fill="#38BDF8" r="3"></circle>
+<circle cx="58" cy="40" fill="#38BDF8" r="3"></circle>
+</svg>
+<span class="brand-text">闪电猫</span>
+</a>
+<nav class="nav-links">
+<a href="index.html#features">互联性能</a>
+<a href="index.html#streaming">流媒体与AI</a>
+<a href="index.html#pricing">方案价格</a>
+<a href="index.html#faq">常见问答</a>
+<a href="pulse.html">航速前沿</a>
+</nav>
+<a class="header-cta" href="https://ww012.twilightaff.com/#/?code=A56DH1Af" rel="nofollow" target="_blank">立即开通</a>
+</div>
+</header>
+<div class="page-container">
+<a class="back-home-btn" href="pulse.html">← 返回航速前沿专栏</a>
+<article class="page-article">
+<header class="article-header">
+<h1 class="article-title">Anycast为什么不一定连到最近城市：用请求与路由记录理解选路</h1>
+<div class="article-meta-bar">
+<span>作者：闪电猫使用手记</span> <span>分类：网络基础</span> <span>更新时间：2026-11-15</span> <span>预计阅读：6 分钟</span>
+</div>
+</header>
+<div class="article-body"><div data-swc-article-body="2026-11-16"><h2>先纠正地图上的直觉</h2><p>你在地图上离某个城市最近，访问分布式服务却像被送到更远地区，这不一定意味着调度错误。Anycast让多个位置对外提供相同地址，流量依据网络路由选择进入其中一个位置。网络中的“更优”受策略与可达路径影响，并不等于地理直线距离最短。把这个区别理解清楚，才能正确阅读所谓全球就近接入的宣传。</p><h2>同一地址与同一服务器不是一回事</h2><p>普通单播地址通常把流量送向一个网络位置；Anycast可以让相同地址在多个地点提供服务。用户看见地址没变化，背后的接入实例却可能不同。不过，仅凭某个地址在多地延迟较低，也不能证明它采用Anycast，需要运营方说明或其他依据。DNS返回多个地址则是另一种分配方式，两者可以配合使用，不能按地址数量简单分类。</p><h2>BGP负责交换可达性与路径信息</h2><p>网络之间通过BGP传播路由，接入方会依照自己的策略选择路径。实际选择涉及可用路由和运营配置，不是一张按城市距离排序的名单。RFC四七八六讨论了Anycast运行中的相关考虑，但它没有保证每个用户永远进入最低延迟位置。理解协议职责，比记住若干“智能路由”营销词更能帮助判断服务说明是否具体。</p><h2>第一步，记录当前解析与接入条件</h2><p>选择自己正常使用的公开服务，写下测试时间、宽带和目标域名。Windows终端运行<code>nslookup 目标域名</code>，保留返回地址。若服务同时使用IPv4与IPv6，标明各自结果，不将两种路径混为一组。这里获得的是解析结果；目标是否使用Anycast，仍需要服务方的公开资料确认，不能从命令输出直接得出答案。</p><h2>第二步，观察实际请求的目的地址</h2><p>在Chrome按F12进入Network，刷新目标页，点击主要文档请求，在Headers中查看Remote Address，并记录状态码。网页可能调用许多其他域名，首页与视频资源的入口也可能不同，应挑选与你问题直接相关的请求。若显示的连接经过本地代理，地址解释需要结合代理方式，不能当成直连路径照搬。</p><h2>第三步，寻找服务主动公开的接入线索</h2><p>有些服务通过响应头或诊断页公开边缘节点标识，可按官方说明读取；没有文档就不要猜测缩写等于某个城市。保存标识、请求时间及耗时，稍后在另一接入网络重复。目的地址相同但标识不同，可能与接入实例有关；标识相同但体验不同，则要继续检查接入到该实例的路径和本地环境。</p><h2>路由跟踪只能呈现部分观察</h2><p>运行<code>tracert 目标域名</code>可查看有响应的路径节点。中间星号可能是设备不响应诊断，也可能涉及其他条件，不能直接标注为丢包地点。路由器名称中的地名也可能过时。把路径作为辅助资料，与请求结果一起保存，避免仅凭一张跟踪图宣称找到了服务商绕路或某段海缆故障。</p><h2>长连接更需要关注稳定性</h2><p>一次短请求成功，不代表持续会议或长时间传输一定稳定。路径变化可能影响应用连接，实际影响取决于服务如何部署、协议以及会话状态处理。可用自己的正常下载或会议做持续观察，记录中断时间与是否自动恢复。不要把Anycast简单写成不适合所有长连接，也不要认为拥有该技术就不需要恢复设计。</p><h2>比较网络服务时怎样使用这些知识</h2><p>查看<a href="https://dajichang.mom/">机场节点线路对比</a>时，把接入地区、目标任务和本地宽带写在需求旁边，再询问服务说明覆盖哪些条件。Anycast、BGP多线和专线是不同维度，出现其中一个词并不自动包含另外两个。对用户而言，真正有价值的是常用时段的任务完成率与故障处理，而不是在架构名词上比数量。</p><h2>将不一致作为下一轮调查入口</h2><p>如果两个网络连接同一服务差异明显，分别记录解析、实际地址、服务标识与等待阶段，交给对应维护方。若资料不足，就保留“接入实例未知”这个结论，不用地图工具强行补齐。网络是持续变化的系统，合理的观察结果应带有时间与范围；下次变化时，你便能比较究竟是解析、入口还是业务处理发生了改变。</p><h2>DNS缓存与入口变化要区分</h2><p>域名解析结果可能在缓存有效期内保持相同，而Anycast的路由入口仍可能因网络条件而变化。因此不要用“解析没变”证明流量路径永远没变。反过来，解析变化也未必意味着Anycast发生切换，可能只是DNS调度选了其他地址。先区分观测层次，再解释变化来源。</p><h2>一个简单的结果表写法</h2><p>为每次请求保留时间、接入网络、解析地址、实际目的地址、公开节点标识与是否成功六列。没有证据的列写未知，不猜城市。若切换网络后速度改善但入口标识相同，可以继续比较连接等待与下载阶段；若入口不同，则保留两种可能，不把改善全归给单一技术。</p></div></div>
+</article>
+</div>
+<footer class="site-footer">
+<div class="footer-nav">
+<a class="footer-link" href="sitemap.html">网站地图</a>
+<a class="footer-link" href="about.html">关于我们</a>
+<a class="footer-link" href="terms.html">服务条款</a>
+<a class="footer-link" href="privacy.html">隐私政策</a>
+</div>
+</footer>
 </body>
 </html>

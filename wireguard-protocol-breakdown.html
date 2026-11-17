@@ -1,74 +1,55 @@
 <!DOCTYPE html>
+
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WireGuard 是什么：适合谁、怎么用、常见问题 - 闪电猫航速前沿</title>
-  <meta name="description" content="WireGuard 近年很受欢迎。介绍它的特点、适用场景、与传统协议的区别、基本使用流程以及常见问题与排查方法。">
-  <link rel="stylesheet" href="style.css">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>WireGuard握手成功却不能访问：密钥、路由和数据流的分层检查</title>
+<meta content="以自己管理的WireGuard测试环境为例，解释握手、AllowedIPs、路由与保活各自作用，提供只读诊断顺序和性能比较方法。" name="description"/>
+<link href="style.css" rel="stylesheet"/>
 </head>
 <body>
-
-  <header class="site-header">
-    <div class="header-container">
-      <a href="index.html" class="brand-logo">
-        <svg class="logo-icon-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="50" cy="50" r="46" fill="#162238" stroke="#FF5A1F" stroke-width="3"/>
-          <path d="M28 62C24 45 32 30 42 22C44 29 48 32 54 30C58 24 64 22 72 23C70 32 64 38 68 44C76 52 72 65 64 72C54 78 36 76 28 62Z" fill="#0F172A" stroke="#38BDF8" stroke-width="2"/>
-          <path d="M58 20L38 48H52L42 76L68 42H52L58 20Z" fill="#FF5A1F"/>
-          <circle cx="44" cy="40" r="3" fill="#38BDF8"/>
-          <circle cx="58" cy="40" r="3" fill="#38BDF8"/>
-        </svg>
-        <span class="brand-text">闪电猫</span>
-      </a>
-
-      <nav class="nav-links">
-        <a href="index.html#features">互联性能</a>
-        <a href="index.html#streaming">流媒体与AI</a>
-        <a href="index.html#pricing">方案价格</a>
-        <a href="index.html#faq">常见问答</a>
-        <a href="pulse.html">航速前沿</a>
-      </nav>
-
-      <a href="https://ww012.twilightaff.com/#/?code=A56DH1Af" class="header-cta" rel="nofollow" target="_blank">立即开通</a>
-    </div>
-  </header>
-
-  <div class="page-container">
-    <a href="pulse.html" class="back-home-btn">&larr; 返回航速前沿专栏</a>
-
-    <article class="page-article">
-      <header class="article-header">
-        <h1 class="article-title">WireGuard 是什么：适合谁、怎么用、常见问题</h1>
-        <div class="article-meta-bar">
- <span>作者：闪电猫使用手记</span> <span>分类：协议常识</span> <span>更新时间：2026-11-10</span> <span>预计阅读：6 分钟</span>
- </div>
-      </header>
-
-      <div class="article-body">
-<p>WireGuard 是一个相对较新的加密隧道协议，以代码精简、连接迅速著称。</p>
-<h2>一、它的特点</h2>
-<ul><li>配置简单，只需要交换密钥与地址。</li><li>基于 UDP，握手迅速，切换网络时恢复很快。</li><li>在移动设备上较省电。</li></ul>
-<h2>二、适合谁</h2>
-<p>需要在家与外出之间保持稳定连接的用户、远程访问家庭网络的人，以及想要简洁配置的用户。</p>
-<h2>三、基本使用流程</h2>
-<p>安装官方或可信的客户端，导入服务商或自己服务器提供的配置，开启连接，然后测试出口地址与延迟。</p>
-<h2>四、常见问题</h2>
-<ul><li>连不上：确认网络没有封锁 UDP，端口是否开放。</li><li>速度不稳：检查 MTU 设置，适当调低。</li><li>与其他软件冲突：避免同时开启多个虚拟网卡软件。</li></ul>
-<h2>五、与其他协议的关系</h2>
-<p>不同协议各有适合的场景，没有绝对的好坏。可以在服务商提供的选项里，对比实际体验再选择。</p>
- </div>
-    </article>
-  </div>
-
-  <footer class="site-footer">
-    <div class="footer-nav">
-      <a href="sitemap.html" class="footer-link">网站地图</a>
-      <a href="about.html" class="footer-link">关于我们</a>
-      <a href="terms.html" class="footer-link">服务条款</a>
-      <a href="privacy.html" class="footer-link">隐私政策</a>
-    </div>
-  </footer>
-
+<header class="site-header">
+<div class="header-container">
+<a class="brand-logo" href="index.html">
+<svg class="logo-icon-svg" fill="none" viewbox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+<circle cx="50" cy="50" fill="#162238" r="46" stroke="#FF5A1F" stroke-width="3"></circle>
+<path d="M28 62C24 45 32 30 42 22C44 29 48 32 54 30C58 24 64 22 72 23C70 32 64 38 68 44C76 52 72 65 64 72C54 78 36 76 28 62Z" fill="#0F172A" stroke="#38BDF8" stroke-width="2"></path>
+<path d="M58 20L38 48H52L42 76L68 42H52L58 20Z" fill="#FF5A1F"></path>
+<circle cx="44" cy="40" fill="#38BDF8" r="3"></circle>
+<circle cx="58" cy="40" fill="#38BDF8" r="3"></circle>
+</svg>
+<span class="brand-text">闪电猫</span>
+</a>
+<nav class="nav-links">
+<a href="index.html#features">互联性能</a>
+<a href="index.html#streaming">流媒体与AI</a>
+<a href="index.html#pricing">方案价格</a>
+<a href="index.html#faq">常见问答</a>
+<a href="pulse.html">航速前沿</a>
+</nav>
+<a class="header-cta" href="https://ww012.twilightaff.com/#/?code=A56DH1Af" rel="nofollow" target="_blank">立即开通</a>
+</div>
+</header>
+<div class="page-container">
+<a class="back-home-btn" href="pulse.html">← 返回航速前沿专栏</a>
+<article class="page-article">
+<header class="article-header">
+<h1 class="article-title">WireGuard握手成功却不能访问：密钥、路由和数据流的分层检查</h1>
+<div class="article-meta-bar">
+<span>作者：闪电猫使用手记</span> <span>分类：协议常识</span> <span>更新时间：2026-11-10</span> <span>预计阅读：6 分钟</span>
+</div>
+</header>
+<div class="article-body"><div data-swc-article-body="2026-11-16"><h2>握手成功只回答了部分问题</h2><p>WireGuard界面显示最近握手，并不保证网页、内网服务或所有应用都能访问。握手说明对等端之间完成了相应协议交互，后续业务还涉及地址、路由、转发和目标服务。本文针对自己管理或获授权的环境提供检查思路，不给未知服务器套用通用配置。先写清要访问的一个目标及端口，再从连接状态向业务路径逐层核对。</p><h2>先认识配置中的不同角色</h2><p>本地接口地址用于隧道内部通信，Peer描述对端，Endpoint提供联系对端的位置，AllowedIPs涉及可路由的地址范围与对端地址匹配。公钥用于识别对端，私钥应留在相应设备。字段看似不多，却不能相互替代。把公网入口写成隧道地址，或把业务网段遗漏，都可能造成部分连接正常、目标访问失败的现象。</p><h2>第一步读取当前状态而不是立即重建</h2><p>在已安装官方工具的受管Linux测试机运行<code>wg show</code>，查看接口、对等端、最近握手与收发计数。记录当前时间，再主动访问允许测试的目标，观察计数是否变化。命令输出中不应传播私钥；完整配置也不要发到公开讨论区。没有握手和已有握手但没有业务响应，是两个不同分支，应分别处理。</p><h2>没有握手时先核对入口条件</h2><p>检查Endpoint地址和端口是否与管理方提供的一致，域名是否能够解析，服务器是否处于正常运行状态。再核对两端公钥配对，不通过重新生成全部密钥来碰运气。网络或防火墙可能限制相应流量，但应由拥有权限的人检查规则。已有其他设备正常时，比较条件差异比重装整个服务更有帮助。</p><h2>握手存在时先测明确的隧道目标</h2><p>按部署说明选择一个确实允许访问且会响应的隧道内目标，再测试所需业务端口。Linux可运行<code>ip route get 目标地址</code>观察系统为该目的地选择的路由；返回内容应结合当前接口理解。目标不回应ping不代表服务端口一定不可用，反之能ping通也不等于业务已通过。每一步都要明确自己验证的是哪一层。</p><h2>AllowedIPs错误会怎样表现</h2><p>目标网段没有被正确包含，业务可能没有进入预期隧道；配置范围过宽，又可能把原本不想接管的流量带进去。不要为图省事直接把所有配置改成默认路由。先按目标地址和现有网段列出需求，再由管理者检查对端与本地设置是否一致。家庭与远端使用相同私有网段时，也可能出现路由冲突，需要有计划地解决地址重叠。</p><h2>收发计数能提供方向线索</h2><p>主动测试时发送计数增加而接收不变，提示请求与回包需要进一步检查，但不能单凭它定位某台设备。接收也增加却业务仍失败，则继续看目标服务、端口和应用错误。计数是累计值，比较前后差额比只看大数字更有用。保持测试目标单一，避免后台流量让你把其他通信误认为当前请求成功。</p><h2>空闲后失败再考虑保活</h2><p>官方Quick Start说明PersistentKeepalive可在特定NAT或防火墙环境中维持映射，配置应依据实际需要。它不是越频繁越快，也不能修复错误路由。若连接仅在长时间空闲后出现问题，先记录复现条件，再与管理者核对是否需要保活。持续下载也失败的情况，不应仅靠增加保活频率来掩盖其他故障。</p><h2>速度比较要同时看处理负担</h2><p>轻量协议不意味着每台设备都能跑满宽带。CPU、实现方式、链路条件和目标服务器都可能影响吞吐。在自己的环境中用相同文件比较，记录传输完成时间、CPU负载与是否掉线。不要把不同设备上的峰值当作协议优劣证据。若小型路由器负载长期很高，可能需要调整部署位置，而非继续增加复杂规则。</p><h2>商业接入是否适用需要另行确认</h2><p>在查看<a href="https://dajichang.mom/">支持隧道连接的机场服务比较</a>时，逐项核对服务实际提供的协议与客户端说明，不因榜单出现某个品牌就假定它支持WireGuard。普通代理订阅与完整隧道配置不是同一种交付。明确自己的目标是网页访问、企业内网还是多设备接入，再根据可验证的兼容条件筛选，避免买完才发现配置无法使用。</p><h2>不要忽略回程与服务监听</h2><p>如果路由显示请求进入隧道，目标端也收到数据，仍可能因为回程、转发或服务监听范围而没有正确响应。管理者可以在获授权环境内检查目标服务与防火墙，普通使用者应提供已完成的分层结果。不要随意关闭全部防火墙来长期运行。需要的修正应限定到明确网段、接口和业务端口，并保留原配置。</p><h2>验收要覆盖一次重连与空闲恢复</h2><p>修正后先完成目标业务，再断开重连并复测，随后验证一段空闲后的恢复情况。确认其他原本正常的本地访问没有受影响。记录最终接口、目标范围与有效改动，后续变更按这份记录继续。握手时间、流量计数与实际任务三个证据一起成立，才比单独一张“已连接”截图更能说明部署符合需要。</p></div></div>
+</article>
+</div>
+<footer class="site-footer">
+<div class="footer-nav">
+<a class="footer-link" href="sitemap.html">网站地图</a>
+<a class="footer-link" href="about.html">关于我们</a>
+<a class="footer-link" href="terms.html">服务条款</a>
+<a class="footer-link" href="privacy.html">隐私政策</a>
+</div>
+</footer>
 </body>
 </html>

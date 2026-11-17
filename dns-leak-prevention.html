@@ -1,74 +1,55 @@
 <!DOCTYPE html>
+
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Twitch 直播延迟高：低延迟模式与设置 - 闪电猫航速前沿</title>
-  <meta name="description" content="看 Twitch 直播总比主播慢很多？说明直播延迟的来源、低延迟模式的开启方式、画质与缓冲设置，以及网络层面的调整。">
-  <link rel="stylesheet" href="style.css">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>双网卡电脑DNS走哪条路：从接口、解析结果到浏览器的核对流程</title>
+<meta content="围绕有线、无线和虚拟接口共存的电脑检查DNS路径，解释IPv4与IPv6结果、浏览器独立解析及内网名称失败的处理顺序。" name="description"/>
+<link href="style.css" rel="stylesheet"/>
 </head>
 <body>
-
-  <header class="site-header">
-    <div class="header-container">
-      <a href="index.html" class="brand-logo">
-        <svg class="logo-icon-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="50" cy="50" r="46" fill="#162238" stroke="#FF5A1F" stroke-width="3"/>
-          <path d="M28 62C24 45 32 30 42 22C44 29 48 32 54 30C58 24 64 22 72 23C70 32 64 38 68 44C76 52 72 65 64 72C54 78 36 76 28 62Z" fill="#0F172A" stroke="#38BDF8" stroke-width="2"/>
-          <path d="M58 20L38 48H52L42 76L68 42H52L58 20Z" fill="#FF5A1F"/>
-          <circle cx="44" cy="40" r="3" fill="#38BDF8"/>
-          <circle cx="58" cy="40" r="3" fill="#38BDF8"/>
-        </svg>
-        <span class="brand-text">闪电猫</span>
-      </a>
-
-      <nav class="nav-links">
-        <a href="index.html#features">互联性能</a>
-        <a href="index.html#streaming">流媒体与AI</a>
-        <a href="index.html#pricing">方案价格</a>
-        <a href="index.html#faq">常见问答</a>
-        <a href="pulse.html">航速前沿</a>
-      </nav>
-
-      <a href="https://ww012.twilightaff.com/#/?code=A56DH1Af" class="header-cta" rel="nofollow" target="_blank">立即开通</a>
-    </div>
-  </header>
-
-  <div class="page-container">
-    <a href="pulse.html" class="back-home-btn">&larr; 返回航速前沿专栏</a>
-
-    <article class="page-article">
-      <header class="article-header">
-        <h1 class="article-title">Twitch 直播延迟高：低延迟模式与设置</h1>
-        <div class="article-meta-bar">
- <span>作者：闪电猫使用手记</span> <span>分类：直播观看</span> <span>更新时间：2026-11-13</span> <span>预计阅读：5 分钟</span>
- </div>
-      </header>
-
-      <div class="article-body">
-<p>看直播时的“延迟”，是你看到的画面与主播实际动作之间的时间差。它由多个环节叠加而成。</p>
-<h2>一、延迟从哪里来</h2>
-<p>主播推流、平台转码与分发、你的播放器缓冲，每一环都会增加一点延迟。其中播放器缓冲是你最能调整的部分。</p>
-<h2>二、使用低延迟模式</h2>
-<p>在播放器设置里选择低延迟，播放器会减少缓冲，让画面更接近实时。代价是网络不稳时更容易卡顿。</p>
-<h2>三、画质与带宽</h2>
-<ul><li>先使用 720p 或 1080p，确认稳定后再提高。</li><li>关闭自动画质切换，减少波动。</li></ul>
-<h2>四、网络层面</h2>
-<p>选择延迟稳定的节点，使用有线网络，关闭其他占用带宽的程序。聊天互动较多时，也要注意浏览器的资源占用。</p>
-<h2>五、取舍</h2>
-<p>追求实时互动，选择低延迟；追求流畅无卡顿，保留一定缓冲。根据场景选择即可。</p>
- </div>
-    </article>
-  </div>
-
-  <footer class="site-footer">
-    <div class="footer-nav">
-      <a href="sitemap.html" class="footer-link">网站地图</a>
-      <a href="about.html" class="footer-link">关于我们</a>
-      <a href="terms.html" class="footer-link">服务条款</a>
-      <a href="privacy.html" class="footer-link">隐私政策</a>
-    </div>
-  </footer>
-
+<header class="site-header">
+<div class="header-container">
+<a class="brand-logo" href="index.html">
+<svg class="logo-icon-svg" fill="none" viewbox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+<circle cx="50" cy="50" fill="#162238" r="46" stroke="#FF5A1F" stroke-width="3"></circle>
+<path d="M28 62C24 45 32 30 42 22C44 29 48 32 54 30C58 24 64 22 72 23C70 32 64 38 68 44C76 52 72 65 64 72C54 78 36 76 28 62Z" fill="#0F172A" stroke="#38BDF8" stroke-width="2"></path>
+<path d="M58 20L38 48H52L42 76L68 42H52L58 20Z" fill="#FF5A1F"></path>
+<circle cx="44" cy="40" fill="#38BDF8" r="3"></circle>
+<circle cx="58" cy="40" fill="#38BDF8" r="3"></circle>
+</svg>
+<span class="brand-text">闪电猫</span>
+</a>
+<nav class="nav-links">
+<a href="index.html#features">互联性能</a>
+<a href="index.html#streaming">流媒体与AI</a>
+<a href="index.html#pricing">方案价格</a>
+<a href="index.html#faq">常见问答</a>
+<a href="pulse.html">航速前沿</a>
+</nav>
+<a class="header-cta" href="https://ww012.twilightaff.com/#/?code=A56DH1Af" rel="nofollow" target="_blank">立即开通</a>
+</div>
+</header>
+<div class="page-container">
+<a class="back-home-btn" href="pulse.html">← 返回航速前沿专栏</a>
+<article class="page-article">
+<header class="article-header">
+<h1 class="article-title">双网卡电脑DNS走哪条路：从接口、解析结果到浏览器的核对流程</h1>
+<div class="article-meta-bar">
+<span>作者：闪电猫使用手记</span> <span>分类：直播观看</span> <span>更新时间：2026-11-13</span> <span>预计阅读：5 分钟</span>
+</div>
+</header>
+<div class="article-body"><div data-swc-article-body="2026-11-16"><h2>多一个网卡不等于多一个漏洞</h2><p>笔记本同时连接网线和无线，又安装了虚拟网卡，解析行为可能比单接口设备复杂。但不能只因存在多个接口或启用了IPv6，就称系统有漏洞。真正需要检查的是：应用使用了什么解析路径，结果是否符合预期，以及是否影响正常访问。先写清使用目的，例如工作内网与公开网页都要可用，再决定哪些现象需要改变。</p><h2>绘制当前接口清单</h2><p>在Windows终端输入<code>ipconfig /all</code>，把已连接的有线、无线与虚拟适配器分开记录。每项写下接口名称、默认网关和DNS服务器，不把已断开的适配器混进去。输出可能较长，可用记事本保存后逐项检查，公开反馈前去掉设备与网络识别信息。接口数量本身不是结论，清单的作用是帮助你知道每项配置来自哪里。</p><h2>第一步只测试系统解析</h2><p>运行<code>nslookup example.com</code>，记录响应服务器及返回地址，再对自己实际需要访问的公开域名重复。这里使用示例域名是为了演示命令，正式判断仍要包含真实任务。返回结果不代表所有程序都使用这条路径；浏览器、代理软件和某些应用可以有独立策略。把这一步标成系统对照，避免给它赋予超出范围的意义。</p><h2>第二步区分两种地址查询</h2><p>可以分别执行<code>nslookup -type=A 目标域名</code>与<code>nslookup -type=AAAA 目标域名</code>，观察IPv4与IPv6地址结果。没有某一类型的记录，不一定是错误，目标可能没有发布。即使都返回地址，也不能说明两条实际连接都可用。不要为了让检测页统一显示一个结果就永久关闭协议，应先找到失败发生的具体步骤。</p><h2>第三步观察应用真正连接的目标</h2><p>在浏览器按F12打开Network，刷新测试页面，点开文档请求查看Headers中的Remote Address。结合系统查询结果，确认实际访问可能使用哪一种地址。网页资源分布在多个域名时，分别检查出错项。若使用代理，看到的地址和诊断结果可能反映代理方式，需要结合客户端记录；不能将所有请求都解释成设备直接连接目标。</p><h2>为双接入做一次有限对照</h2><p>保留当前设置截图，先只断开无线而保留有线，重复系统查询与网页任务；随后恢复原状。若条件允许，再单独用无线测试。每轮只改变接入接口，浏览器与客户端设置保持一致。结果不同只能说明接入条件相关，还要继续看解析服务器、路由和应用行为。它不直接证明某张网卡存在安全缺陷，更不意味着应删除所有虚拟适配器。</p><h2>浏览器独立解析需要单独登记</h2><p>Firefox设置的隐私与安全区域提供DNS over HTTPS相关控制，可查看当前状态与提供方。记录原设置后，依照自身或组织要求选择合适模式，再重复公开域名与内网任务。若浏览器正常而命令行失败，可能因为两者路径不同；若反过来，也可能是浏览器的独立设置或扩展影响。不要把一项成功替代另一项验证。</p><h2>代理客户端的解析与路由要一起看</h2><p>比较<a href="https://dajichang.mom/">多设备机场配置指南</a>时，优先核对服务提供的客户端说明是否覆盖你的系统与模式。系统代理、应用代理和虚拟接口接管范围不同，不能只凭“已连接”就断言所有查询已经改变。将客户端的模式和DNS策略写到接口表旁边；不理解的配置先保留原值，不把不同教程中的选项拼成一份未经解释的设置。</p><h2>内部名称打不开时不要只换公共DNS</h2><p>打印机、公司服务器或家庭存储可能依赖内部解析。公共域名正常而内部名称失败，先确认所需网络已连接，并用原有内部解析条件做对照。必要时由网络维护者处理分域解析。随便将内部名称发给外部解析器通常也不能得到正确地址。这个问题需要协调可用性与解析范围，不是选择一个所谓速度最快的公共服务就能解决。</p><h2>缓存会让短时对照出现误差</h2><p>系统查询可能使用已保存的记录，浏览器也可能缓存结果。先用<code>ipconfig /displaydns</code>查看系统缓存，需要时再执行<code>ipconfig /flushdns</code>，并记录操作。清理系统缓存不能保证其他层全部清空，所以对照时要写明条件。域名记录刚变化时，也应允许正常更新时间，不要不停切换设置直到偶然看到期望地址。</p><h2>怎样理解在线检测的名单</h2><p>检测网页能观察到的解析来源受它的测试方法与当前浏览器影响。名单出现某个网络名称，可以作为进一步核对的线索，但不能仅凭陌生名称就判定泄漏。对照你设定的解析路径、服务说明与不同接入结果，才能判断是否偏离预期。一次检测没有异常也不意味着设备上所有程序、所有时间都采用相同路径。</p><h2>验收时回到真正要完成的任务</h2><p>重新访问公开网页、工作内部服务和常用应用，确保变化没有只修好检测页却破坏日常使用。将最终接口、解析策略、有效改动和未解问题保存成一页记录。以后新增虚拟网卡或更换客户端时，优先复查受影响部分。清楚的配置关系比反复宣称“彻底零泄漏”更能帮助长期维护，也能让技术支持快速接续调查。</p></div></div>
+</article>
+</div>
+<footer class="site-footer">
+<div class="footer-nav">
+<a class="footer-link" href="sitemap.html">网站地图</a>
+<a class="footer-link" href="about.html">关于我们</a>
+<a class="footer-link" href="terms.html">服务条款</a>
+<a class="footer-link" href="privacy.html">隐私政策</a>
+</div>
+</footer>
 </body>
 </html>
